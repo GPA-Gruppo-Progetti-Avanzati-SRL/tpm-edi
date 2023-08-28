@@ -50,6 +50,11 @@ func TestPain_008_001_02_To_Stin_Mo_001_00_01_00_Conv(t *testing.T) {
 			MmbId: pain_008_001_02_common.MustToMax35Text(pain_008_001_02_common.Max35TextSample),
 		}
 
+	stinObj.PmtInf[0].DrctDbtTxInf[0].PmtId.InstrId = "1"
+	stinObj.PmtInf[0].CdtrAgt.FinInstnId.BIC = ""
+	stinObj.PmtInf[0].DrctDbtTxInf[0].DbtrAgt.FinInstnId.BIC = "UNCRITMM"
+	stinObj.PmtInf[0].DrctDbtTxInf[0].DbtrAgt.FinInstnId.Othr = nil
+
 	stinData, err := stinObj.ToXML()
 	require.NoError(t, err)
 
