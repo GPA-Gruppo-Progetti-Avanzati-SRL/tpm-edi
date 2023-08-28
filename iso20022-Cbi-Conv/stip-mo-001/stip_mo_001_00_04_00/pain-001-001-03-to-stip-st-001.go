@@ -1,18 +1,18 @@
-package iso20022CbiConv
+package stip_mo_001_00_04_00
 
 import (
-	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-cbi/cbi/stip_mo_001/stip_mo_001_00_04_00"
+	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-cbi/cbi/stip_mo_001/stip_mo_001_00_04_00/stip-st-001"
 	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022/iso-20022/messages/pain/001.001.03/pain_001_001_03"
 	"github.com/rs/zerolog/log"
 	"io/fs"
 	"os"
 )
 
-func Pain_001_001_03_To_Stip_Mo_001_00_04_00_Conv(in *pain_001_001_03.Document) (*stip_mo_001_00_04_00.Document, error) {
+func Pain_001_001_03_To_Stip_St_001_Conv(in *pain_001_001_03.Document) (*stip_st_001.Document, error) {
 
-	const semLogContext = "pain_001_001_03_to_stip_mo_001_00_04_00::conv"
+	const semLogContext = "pain-001-001-03-to-stip-st-001::conv"
 
-	stip := stip_mo_001_00_04_00.Document{
+	stip := stip_st_001.Document{
 		GrpHdr: in.CstmrCdtTrfInitn.GrpHdr,
 		PmtInf: in.CstmrCdtTrfInitn.PmtInf,
 	}
@@ -20,9 +20,9 @@ func Pain_001_001_03_To_Stip_Mo_001_00_04_00_Conv(in *pain_001_001_03.Document) 
 	return &stip, nil
 }
 
-func Pain_001_001_03_To_Stip_Mo_001_00_04_00_XMLDataConv(painData []byte) ([]byte, error) {
+func Pain_001_001_03_To_Stip_St_001_XMLDataConv(painData []byte) ([]byte, error) {
 
-	const semLogContext = "pain_001_001_03_to_stip_mo_001_00_04_00::xml-data-conv"
+	const semLogContext = "pain-001-001-03-to-stip-st-001::xml-data-conv"
 
 	pain, err := pain_001_001_03.NewDocumentFromXML(painData)
 	if err != nil {
@@ -30,7 +30,7 @@ func Pain_001_001_03_To_Stip_Mo_001_00_04_00_XMLDataConv(painData []byte) ([]byt
 		return nil, err
 	}
 
-	stip, err := Pain_001_001_03_To_Stip_Mo_001_00_04_00_Conv(pain)
+	stip, err := Pain_001_001_03_To_Stip_St_001_Conv(pain)
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
 		return nil, err
@@ -45,9 +45,9 @@ func Pain_001_001_03_To_Stip_Mo_001_00_04_00_XMLDataConv(painData []byte) ([]byt
 	return stipData, nil
 }
 
-func Pain_001_001_03_To_Stip_Mo_001_00_04_00_XMLFileConv(inFn string, outFn string) error {
+func Pain_001_001_03_To_Stip_St_001_XMLFileConv(inFn string, outFn string) error {
 
-	const semLogContext = "pain_001_001_03_to_stip_mo_001_00_04_00::xml-file-conv"
+	const semLogContext = "pain-001-001-03-to-stip-st-001::xml-file-conv"
 
 	painData, err := os.ReadFile(inFn)
 	if err != nil {
@@ -55,7 +55,7 @@ func Pain_001_001_03_To_Stip_Mo_001_00_04_00_XMLFileConv(inFn string, outFn stri
 		return err
 	}
 
-	stipData, err := Pain_001_001_03_To_Stip_Mo_001_00_04_00_XMLDataConv(painData)
+	stipData, err := Pain_001_001_03_To_Stip_St_001_XMLDataConv(painData)
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
 		return err
