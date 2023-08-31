@@ -1,9 +1,9 @@
 github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-common v0.1.12 h1:hy3dGTPp9gqTDrf9iGgXuyzb8cC3Ev1x1fAflDzha4k=
 github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-common v0.1.12/go.mod h1:WZLFgy+qbyanFBP25v+0WVvcqgYJHCeqsRmVSWXMC2o=
-github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-cbi v0.0.6 h1:Up2L76gP8LO1/KHxggtFh905/j3nMBsR5ISLxvqqwtg=
-github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-cbi v0.0.6/go.mod h1:/pV7tOqx8UFDy4pPmTaZ9wTVfLHtD6j39NfOuSu06JU=
-github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022 v0.0.6 h1:sYCcMZLqardzhm1VsF1sq75uzcSTsmKN+zjDTA0NyAE=
-github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022 v0.0.6/go.mod h1:vrhztNXj4vev9gajYE+Y6R7RZcsWWaIw4jaU/bhszvc=
+github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-cbi v0.0.7 h1:+QvU1f+0qOjGia0fmtMuge8T15gC6n/0WK6m2EDF5fY=
+github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-cbi v0.0.7/go.mod h1:iY6wBBq4sCs7ay932wr1GoOqUA4Dwbv1j7W8K8smKDc=
+github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022 v0.0.7 h1:3h5DZihwszK0mCz4YbLwd1LZMWtRuC0E34e5fBN2vCk=
+github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022 v0.0.7/go.mod h1:vrhztNXj4vev9gajYE+Y6R7RZcsWWaIw4jaU/bhszvc=
 github.com/coreos/go-systemd/v22 v22.5.0/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSVTIJ3seZv2GcEnc=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

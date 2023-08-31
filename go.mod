@@ -3,8 +3,8 @@ module github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi
 go 1.19
 
 require (
-	github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-cbi v0.0.6
-	github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022 v0.0.6
+	github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-cbi v0.0.7
+	github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022 v0.0.7
 	github.com/rs/zerolog v1.30.0
 	github.com/stretchr/testify v1.8.4
 )
