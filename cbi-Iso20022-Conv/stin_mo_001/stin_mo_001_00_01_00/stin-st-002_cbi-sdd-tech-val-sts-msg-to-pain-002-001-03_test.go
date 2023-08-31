@@ -2,8 +2,8 @@ package stin_mo_001_00_01_00_test
 
 import (
 	_ "embed"
-	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-cbi/cbi/stin_mo_001/stin_mo_001_00_01_00/stin-st-002-cbisdd-techvalstsmsg"
-	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi/cbi-Iso20022-Conv/stin-mo-001/stin_mo_001_00_01_00"
+	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-cbi/cbi/stin_mo_001/stin_mo_001_00_01_00/stin_st_002_cbisdd_techvalstsmsg"
+	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi/cbi-Iso20022-Conv/stin_mo_001/stin_mo_001_00_01_00"
 	"github.com/stretchr/testify/require"
 	"io/fs"
 	"os"

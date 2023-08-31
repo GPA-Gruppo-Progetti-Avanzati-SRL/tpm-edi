@@ -1,7 +1,7 @@
 package stin_mo_001_00_01_00
 
 import (
-	stin_st_002_cbisdd_techvalstsmsg "github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-cbi/cbi/stin_mo_001/stin_mo_001_00_01_00/stin-st-002-cbisdd-techvalstsmsg"
+	stin_st_002_cbisdd_techvalstsmsg "github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-cbi/cbi/stin_mo_001/stin_mo_001_00_01_00/stin_st_002_cbisdd_techvalstsmsg"
 	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022/iso-20022/messages/pain/002.001.03/pain_002_001_03"
 	"github.com/rs/zerolog/log"
 	"io/fs"
@@ -22,11 +22,11 @@ func Stin_St_002_CbiSdd_TechValStsMsg_To_Pain_002_001_03_Conv(in *stin_st_002_cb
 	return &pain, nil
 }
 
-func Stin_St_002_CbiSdd_TechValStsMsg_To_Pain_002_001_03_XMLDataConv(painData []byte) ([]byte, error) {
+func Stin_St_002_CbiSdd_TechValStsMsg_To_Pain_002_001_03_XMLDataConv(stinData []byte) ([]byte, error) {
 
 	const semLogContext = "stin-st-002_cbi-sdd-tech-val-sts-msg-to-pain-002-001-03::xml-data-conv"
 
-	stin, err := stin_st_002_cbisdd_techvalstsmsg.NewDocumentFromXML(painData)
+	stin, err := stin_st_002_cbisdd_techvalstsmsg.NewDocumentFromXML(stinData)
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
 		return nil, err
@@ -38,13 +38,13 @@ func Stin_St_002_CbiSdd_TechValStsMsg_To_Pain_002_001_03_XMLDataConv(painData []
 		return nil, err
 	}
 
-	stipData, err := pain.ToXML()
+	painData, err := pain.ToXML()
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
 		return nil, err
 	}
 
-	return stipData, nil
+	return painData, nil
 }
 
 func Stin_St_002_CbiSdd_TechValStsMsg_To_Pain_002_001_03_XMLFileConv(inFn string, outFn string) error {
