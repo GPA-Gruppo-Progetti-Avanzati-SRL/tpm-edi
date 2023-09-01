@@ -3,7 +3,7 @@ package strn_mo_001_00_01_02_test
 import (
 	_ "embed"
 	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-cbi/cbi/strn_mo_001/strn_mo_001_00_01_02/strn_st_001_cbibktocstmrstmt_reqmsg"
-	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi/cbi-Iso20022-Conv/stin_mo_001/strn_mo_001_00_01_02"
+	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi/cbi-Iso20022-Conv/strn_mo_001/strn_mo_001_00_01_02"
 	"github.com/stretchr/testify/require"
 	"io/fs"
 	"os"
