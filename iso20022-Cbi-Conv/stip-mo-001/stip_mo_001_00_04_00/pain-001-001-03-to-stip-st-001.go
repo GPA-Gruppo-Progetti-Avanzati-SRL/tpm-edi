@@ -8,9 +8,34 @@ import (
 	"os"
 )
 
-func Pain_001_001_03_To_Stip_St_001_Conv(in *pain_001_001_03.Document) (*stip_st_001.Document, error) {
+type ConvOptions struct {
+	pain_001_001_03_Adapter pain_001_001_03.DocumentAdapter
+}
+
+type ConvOption func(opts *ConvOptions)
+
+func WithConvAdapter(adapter pain_001_001_03.DocumentAdapter) ConvOption {
+	return func(opts *ConvOptions) {
+		opts.pain_001_001_03_Adapter = adapter
+	}
+}
+
+func Pain_001_001_03_To_Stip_St_001_Conv(in *pain_001_001_03.Document, opts ...ConvOption) (*stip_st_001.Document, error) {
 
 	const semLogContext = "pain-001-001-03-to-stip-st-001::conv"
+
+	options := ConvOptions{}
+	for _, o := range opts {
+		o(&options)
+	}
+
+	var err error
+	if options.pain_001_001_03_Adapter != nil {
+		in, err = options.pain_001_001_03_Adapter(in)
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	stip := stip_st_001.Document{
 		GrpHdr: in.CstmrCdtTrfInitn.GrpHdr,
@@ -20,7 +45,7 @@ func Pain_001_001_03_To_Stip_St_001_Conv(in *pain_001_001_03.Document) (*stip_st
 	return &stip, nil
 }
 
-func Pain_001_001_03_To_Stip_St_001_XMLDataConv(painData []byte) ([]byte, error) {
+func Pain_001_001_03_To_Stip_St_001_XMLDataConv(painData []byte, opts ...ConvOption) ([]byte, error) {
 
 	const semLogContext = "pain-001-001-03-to-stip-st-001::xml-data-conv"
 
@@ -30,7 +55,7 @@ func Pain_001_001_03_To_Stip_St_001_XMLDataConv(painData []byte) ([]byte, error)
 		return nil, err
 	}
 
-	stip, err := Pain_001_001_03_To_Stip_St_001_Conv(pain)
+	stip, err := Pain_001_001_03_To_Stip_St_001_Conv(pain, opts...)
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
 		return nil, err
@@ -45,7 +70,7 @@ func Pain_001_001_03_To_Stip_St_001_XMLDataConv(painData []byte) ([]byte, error)
 	return stipData, nil
 }
 
-func Pain_001_001_03_To_Stip_St_001_XMLFileConv(inFn string, outFn string) error {
+func Pain_001_001_03_To_Stip_St_001_XMLFileConv(inFn string, outFn string, opts ...ConvOption) error {
 
 	const semLogContext = "pain-001-001-03-to-stip-st-001::xml-file-conv"
 
@@ -55,7 +80,7 @@ func Pain_001_001_03_To_Stip_St_001_XMLFileConv(inFn string, outFn string) error
 		return err
 	}
 
-	stipData, err := Pain_001_001_03_To_Stip_St_001_XMLDataConv(painData)
+	stipData, err := Pain_001_001_03_To_Stip_St_001_XMLDataConv(painData, opts...)
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
 		return err

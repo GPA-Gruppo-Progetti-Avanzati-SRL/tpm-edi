@@ -8,19 +8,44 @@ import (
 	"os"
 )
 
-func Pain_008_001_02_To_Stin_St_001_CbiSdd_ReqMsg_Conv(in *pain_008_001_02.Document) (*stin_st_001_cbisdd_reqmsg.Document, error) {
+type ConvOptions struct {
+	pain_008_001_02_Adapter pain_008_001_02.DocumentAdapter
+}
+
+type ConvOption func(opts *ConvOptions)
+
+func WithConvAdapter(adapter pain_008_001_02.DocumentAdapter) ConvOption {
+	return func(opts *ConvOptions) {
+		opts.pain_008_001_02_Adapter = adapter
+	}
+}
+
+func Pain_008_001_02_To_Stin_St_001_CbiSdd_ReqMsg_Conv(in *pain_008_001_02.Document, opts ...ConvOption) (*stin_st_001_cbisdd_reqmsg.Document, error) {
 
 	const semLogContext = "pain-008-001-02-to-stin-st-001_cbi-sdd-req-msg::conv"
 
-	stip := stin_st_001_cbisdd_reqmsg.Document{
+	options := ConvOptions{}
+	for _, o := range opts {
+		o(&options)
+	}
+
+	var err error
+	if options.pain_008_001_02_Adapter != nil {
+		in, err = options.pain_008_001_02_Adapter(in)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	stin := stin_st_001_cbisdd_reqmsg.Document{
 		GrpHdr: in.CstmrDrctDbtInitn.GrpHdr,
 		PmtInf: in.CstmrDrctDbtInitn.PmtInf,
 	}
 
-	return &stip, nil
+	return &stin, nil
 }
 
-func Pain_008_001_02_To_Stin_St_001_CbiSdd_ReqMsg_XMLDataConv(painData []byte) ([]byte, error) {
+func Pain_008_001_02_To_Stin_St_001_CbiSdd_ReqMsg_XMLDataConv(painData []byte, opts ...ConvOption) ([]byte, error) {
 
 	const semLogContext = "pain-008-001-02-to-stin-st-001_cbi-sdd-req-msg::xml-data-conv"
 
@@ -30,7 +55,7 @@ func Pain_008_001_02_To_Stin_St_001_CbiSdd_ReqMsg_XMLDataConv(painData []byte) (
 		return nil, err
 	}
 
-	stip, err := Pain_008_001_02_To_Stin_St_001_CbiSdd_ReqMsg_Conv(pain)
+	stip, err := Pain_008_001_02_To_Stin_St_001_CbiSdd_ReqMsg_Conv(pain, opts...)
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
 		return nil, err
@@ -45,7 +70,7 @@ func Pain_008_001_02_To_Stin_St_001_CbiSdd_ReqMsg_XMLDataConv(painData []byte) (
 	return stipData, nil
 }
 
-func Pain_008_001_02_To_Stin_St_001_CbiSdd_ReqMsg_XMLFileConv(inFn string, outFn string) error {
+func Pain_008_001_02_To_Stin_St_001_CbiSdd_ReqMsg_XMLFileConv(inFn string, outFn string, opts ...ConvOption) error {
 
 	const semLogContext = "pain-008-001-02-to-stin-st-001_cbi-sdd-req-msg::xml-file-conv"
 
@@ -55,7 +80,7 @@ func Pain_008_001_02_To_Stin_St_001_CbiSdd_ReqMsg_XMLFileConv(inFn string, outFn
 		return err
 	}
 
-	stipData, err := Pain_008_001_02_To_Stin_St_001_CbiSdd_ReqMsg_XMLDataConv(painData)
+	stipData, err := Pain_008_001_02_To_Stin_St_001_CbiSdd_ReqMsg_XMLDataConv(painData, opts...)
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
 		return err
