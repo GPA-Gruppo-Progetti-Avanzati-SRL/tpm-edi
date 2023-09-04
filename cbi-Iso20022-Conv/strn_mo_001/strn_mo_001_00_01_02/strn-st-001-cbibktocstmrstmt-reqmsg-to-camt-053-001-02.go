@@ -1,6 +1,7 @@
 package strn_mo_001_00_01_02
 
 import (
+	"fmt"
 	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-cbi/cbi/strn_mo_001/strn_mo_001_00_01_02/strn_st_001_cbibktocstmrstmt_reqmsg"
 	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022/iso-20022/messages/camt/053.001.02/camt_053_001_02"
 	"github.com/rs/zerolog/log"
@@ -20,7 +21,7 @@ func WithConvAdapter(adapter camt_053_001_02.DocumentAdapter) ConvOption {
 	}
 }
 
-func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_Conv(in *strn_st_001_cbibktocstmrstmt_reqmsg.Document, opts ...ConvOption) (*camt_053_001_02.Document, error) {
+func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_Conv(in *strn_st_001_cbibktocstmrstmt_reqmsg.Document, opts ...ConvOption) ([]*camt_053_001_02.Document, error) {
 
 	const semLogContext = "strn-st-001-cbibktocstmrstmtreqlogmsg-to-camt-053-001-02::conv"
 
@@ -29,25 +30,30 @@ func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_Conv(in *strn_st_0
 		o(&options)
 	}
 
-	pain := camt_053_001_02.Document{
-		BkToCstmrStmt: camt_053_001_02.BankToCustomerStatementV02{
-			GrpHdr: in.GrpHdr,
-			Stmt:   in.Stmt,
-		},
-	}
-
-	var err error
-	if options.camt_053_001_02_Adapter != nil {
-		_, err = options.camt_053_001_02_Adapter(&pain)
-		if err != nil {
-			return nil, err
+	var camts []*camt_053_001_02.Document
+	for _, env := range in.CBIEnvelBkToCstmrStmtReqLogMsg {
+		pain := camt_053_001_02.Document{
+			BkToCstmrStmt: camt_053_001_02.BankToCustomerStatementV02{
+				GrpHdr: env.CBIBkToCstmrStmtReqLogMsg.CBIDlyStmtReqLogMsg.GrpHdr,
+				Stmt:   env.CBIBkToCstmrStmtReqLogMsg.CBIDlyStmtReqLogMsg.Stmt,
+			},
 		}
+
+		var err error
+		if options.camt_053_001_02_Adapter != nil {
+			_, err = options.camt_053_001_02_Adapter(&pain)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		camts = append(camts, &pain)
 	}
 
-	return &pain, nil
+	return camts, nil
 }
 
-func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_XMLDataConv(strnData []byte, opts ...ConvOption) ([]byte, error) {
+func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_XMLDataConv(strnData []byte, opts ...ConvOption) ([][]byte, error) {
 
 	const semLogContext = "strn-st-001-cbibktocstmrstmtreqlogmsg-to-camt-053-001-02::xml-data-conv"
 
@@ -57,19 +63,24 @@ func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_XMLDataConv(strnDa
 		return nil, err
 	}
 
-	camt, err := Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_Conv(strn, opts...)
+	camts, err := Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_Conv(strn, opts...)
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
 		return nil, err
 	}
 
-	camtData, err := camt.ToXML()
-	if err != nil {
-		log.Error().Err(err).Msg(semLogContext)
-		return nil, err
+	var camtsData [][]byte
+	for _, camt := range camts {
+		camtData, err := camt.ToXML()
+		if err != nil {
+			log.Error().Err(err).Msg(semLogContext)
+			return nil, err
+		}
+
+		camtsData = append(camtsData, camtData)
 	}
 
-	return camtData, nil
+	return camtsData, nil
 }
 
 func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_XMLFileConv(inFn string, outFn string, opts ...ConvOption) error {
@@ -82,16 +93,20 @@ func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_XMLFileConv(inFn s
 		return err
 	}
 
-	camtData, err := Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_XMLDataConv(strnData, opts...)
+	camtsData, err := Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_XMLDataConv(strnData, opts...)
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
 		return err
 	}
 
-	err = os.WriteFile(outFn, camtData, fs.ModePerm)
-	if err != nil {
-		log.Error().Err(err).Msg(semLogContext)
-		return err
+	for i, camtData := range camtsData {
+		outf := fmt.Sprintf(outFn, i)
+		err = os.WriteFile(fmt.Sprintf(outFn, i), camtData, fs.ModePerm)
+		if err != nil {
+			log.Error().Err(err).Msg(semLogContext)
+			return err
+		}
+		defer os.Remove(outf)
 	}
 
 	return nil
