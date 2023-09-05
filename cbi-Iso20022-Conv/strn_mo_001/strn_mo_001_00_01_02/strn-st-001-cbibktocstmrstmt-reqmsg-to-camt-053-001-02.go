@@ -83,31 +83,33 @@ func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_XMLDataConv(strnDa
 	return camtsData, nil
 }
 
-func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_XMLFileConv(inFn string, outFn string, opts ...ConvOption) error {
+func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_XMLFileConv(inFn string, outFn string, opts ...ConvOption) ([]string, error) {
 
 	const semLogContext = "strn-st-001-cbibktocstmrstmtreqlogmsg-to-camt-053-001-02::xml-file-conv"
 
 	strnData, err := os.ReadFile(inFn)
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
-		return err
+		return nil, err
 	}
 
 	camtsData, err := Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_XMLDataConv(strnData, opts...)
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
-		return err
+		return nil, err
 	}
 
+	var outfiles []string
 	for i, camtData := range camtsData {
 		outf := fmt.Sprintf(outFn, i)
 		err = os.WriteFile(fmt.Sprintf(outFn, i), camtData, fs.ModePerm)
 		if err != nil {
 			log.Error().Err(err).Msg(semLogContext)
-			return err
+			return nil, err
 		}
-		defer os.Remove(outf)
+
+		outfiles = append(outfiles, outf)
 	}
 
-	return nil
+	return outfiles, nil
 }
