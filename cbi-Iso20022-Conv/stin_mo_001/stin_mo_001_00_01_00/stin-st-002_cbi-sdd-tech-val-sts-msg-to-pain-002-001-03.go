@@ -33,7 +33,7 @@ func Stin_St_002_CbiSdd_TechValStsMsg_To_Pain_002_001_03_Conv(in *stin_st_002_cb
 	var pains []*pain_002_001_03.Document
 	for _, env := range in.CBIEnvelSDDTechValStsLogMsg {
 		pain := pain_002_001_03.Document{
-			CstmrPmtStsRpt: pain_002_001_03.CustomerPaymentStatusReportV03{
+			CstmrPmtStsRpt: &pain_002_001_03.CustomerPaymentStatusReportV03{
 				GrpHdr:            env.CBISDDTechValStsLogMsg.GrpHdr,
 				OrgnlGrpInfAndSts: env.CBISDDTechValStsLogMsg.OrgnlGrpInfAndSts,
 				OrgnlPmtInfAndSts: env.CBISDDTechValStsLogMsg.OrgnlPmtInfAndSts,

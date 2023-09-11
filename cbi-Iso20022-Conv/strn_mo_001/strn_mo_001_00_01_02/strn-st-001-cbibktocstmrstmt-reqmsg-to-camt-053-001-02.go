@@ -33,7 +33,7 @@ func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_Conv(in *strn_st_0
 	var camts []*camt_053_001_02.Document
 	for _, env := range in.CBIEnvelBkToCstmrStmtReqLogMsg {
 		pain := camt_053_001_02.Document{
-			BkToCstmrStmt: camt_053_001_02.BankToCustomerStatementV02{
+			BkToCstmrStmt: &camt_053_001_02.BankToCustomerStatementV02{
 				GrpHdr: env.CBIBkToCstmrStmtReqLogMsg.CBIDlyStmtReqLogMsg.GrpHdr,
 				Stmt:   env.CBIBkToCstmrStmtReqLogMsg.CBIDlyStmtReqLogMsg.Stmt,
 			},
