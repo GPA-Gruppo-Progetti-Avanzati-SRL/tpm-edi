@@ -4,8 +4,8 @@ go 1.19
 
 require (
 	github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-common v0.1.19
-	github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-cbi v0.0.16
-	github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022 v0.0.16
+	github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-cbi v0.0.18
+	github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022 v0.0.18
 	github.com/rs/zerolog v1.30.0
 	github.com/stretchr/testify v1.8.4
 )
