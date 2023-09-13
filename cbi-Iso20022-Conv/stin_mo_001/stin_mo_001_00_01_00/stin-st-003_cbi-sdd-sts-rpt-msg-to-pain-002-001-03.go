@@ -20,12 +20,11 @@ func Stin_St_003_CbiSdd_StsRptMsg_To_Pain_002_001_03_Conv(in *stin_st_003_cbisdd
 
 	var pains []*pain_002_001_03.Document
 	for _, env := range in.CBIEnvelSDDStsRptLogMsg {
-		pain := pain_002_001_03.Document{
-			CstmrPmtStsRpt: &pain_002_001_03.CustomerPaymentStatusReportV03{
-				GrpHdr:            env.CBISDDStsRptLogMsg.GrpHdr,
-				OrgnlGrpInfAndSts: env.CBISDDStsRptLogMsg.OrgnlGrpInfAndSts,
-				OrgnlPmtInfAndSts: env.CBISDDStsRptLogMsg.OrgnlPmtInfAndSts,
-			},
+		pain := pain_002_001_03.NewDocument()
+		pain.CstmrPmtStsRpt = &pain_002_001_03.CustomerPaymentStatusReportV03{
+			GrpHdr:            env.CBISDDStsRptLogMsg.GrpHdr,
+			OrgnlGrpInfAndSts: env.CBISDDStsRptLogMsg.OrgnlGrpInfAndSts,
+			OrgnlPmtInfAndSts: env.CBISDDStsRptLogMsg.OrgnlPmtInfAndSts,
 		}
 
 		var err error
