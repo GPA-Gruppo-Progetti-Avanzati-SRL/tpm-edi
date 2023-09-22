@@ -2,6 +2,7 @@ package stip_mo_001_00_04_00_test
 
 import (
 	_ "embed"
+	"fmt"
 	pain_001_001_03_common "github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022/iso-20022/messages/pain/001.001.03/common"
 	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022/iso-20022/messages/pain/001.001.03/pain_001_001_03"
 	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022/iso-20022/messages/xsdt"
@@ -15,7 +16,7 @@ import (
 //go:embed example-pain.001.001.03.xml
 var example []byte
 
-const example_stip_st_001 = "example-stip-st-001.xml"
+const example_stip_st_001 = "example-stip-st-001_%d.xml"
 
 func Pain001_001_03_Adapter(pain *pain_001_001_03.Document) (*pain_001_001_03.Document, error) {
 	pain.CstmrCdtTrfInitn.GrpHdr.CtrlSum = xsdt.MustToDecimal(float64(220.0))
@@ -28,24 +29,32 @@ func Pain001_001_03_Adapter(pain *pain_001_001_03.Document) (*pain_001_001_03.Do
 		},
 	}
 
-	pain.CstmrCdtTrfInitn.PmtInf[0].DbtrAgt.FinInstnId.ClrSysMmbId =
-		&pain_001_001_03.ClearingSystemMemberIdentification2{
-			MmbId: pain_001_001_03_common.MustToMax35Text(pain_001_001_03_common.Max35TextSample),
-		}
+	for i := range pain.CstmrCdtTrfInitn.PmtInf {
+		pain.CstmrCdtTrfInitn.PmtInf[i].DbtrAgt.FinInstnId.ClrSysMmbId =
+			&pain_001_001_03.ClearingSystemMemberIdentification2{
+				MmbId: pain_001_001_03_common.MustToMax35Text(pain_001_001_03_common.Max35TextSample),
+			}
 
-	pain.CstmrCdtTrfInitn.PmtInf[0].CdtTrfTxInf[0].PmtId.InstrId = "1"
+		for j := range pain.CstmrCdtTrfInitn.PmtInf[i].CdtTrfTxInf {
+			pain.CstmrCdtTrfInitn.PmtInf[i].CdtTrfTxInf[j].PmtId.InstrId = "1"
+		}
+	}
+
 	return pain, nil
 }
 
 func TestPain_001_001_03_To_Stip_St_001_XMLConv(t *testing.T) {
 	adapter := pain_001_001_03.DocumentAdapter(Pain001_001_03_Adapter)
-	stipData, err := stip_mo_001_00_04_00.Pain_001_001_03_To_Stip_St_001_XMLDataConv(example, stip_mo_001_00_04_00.WithConvAdapter(adapter))
+	stipsData, err := stip_mo_001_00_04_00.Pain_001_001_03_To_Stip_St_001_XMLDataConv(example, stip_mo_001_00_04_00.WithConvAdapter(adapter))
 	require.NoError(t, err)
 
-	err = os.WriteFile(example_stip_st_001, stipData, fs.ModePerm)
-	require.NoError(t, err)
+	for i, stipData := range stipsData {
+		outF := fmt.Sprintf(example_stip_st_001, i)
+		err = os.WriteFile(outF, stipData, fs.ModePerm)
+		require.NoError(t, err)
 
-	defer os.Remove(example_stip_st_001)
+		defer os.Remove(outF)
+	}
 }
 
 func TestPain_001_001_03_To_Stip_St_001_Conv(t *testing.T) {
@@ -53,14 +62,17 @@ func TestPain_001_001_03_To_Stip_St_001_Conv(t *testing.T) {
 	pain, err := pain_001_001_03.NewDocumentFromXML(example)
 	require.NoError(t, err)
 
-	stipObj, err := stip_mo_001_00_04_00.Pain_001_001_03_To_Stip_St_001_Conv(pain, stip_mo_001_00_04_00.WithConvAdapter(adapter))
+	stipsObj, err := stip_mo_001_00_04_00.Pain_001_001_03_To_Stip_St_001_Conv(pain, stip_mo_001_00_04_00.WithConvAdapter(adapter))
 	require.NoError(t, err)
 
-	stipData, err := stipObj.ToXML()
-	require.NoError(t, err)
+	for i, stipObj := range stipsObj {
+		stipData, err := stipObj.ToXML()
+		require.NoError(t, err)
 
-	err = os.WriteFile(example_stip_st_001, stipData, fs.ModePerm)
-	require.NoError(t, err)
+		outF := fmt.Sprintf(example_stip_st_001, i)
+		err = os.WriteFile(outF, stipData, fs.ModePerm)
+		require.NoError(t, err)
 
-	defer os.Remove(example_stip_st_001)
+		defer os.Remove(outF)
+	}
 }
