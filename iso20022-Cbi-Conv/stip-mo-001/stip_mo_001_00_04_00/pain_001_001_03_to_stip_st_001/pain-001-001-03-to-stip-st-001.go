@@ -1,4 +1,4 @@
-package stip_mo_001_00_04_00
+package pain_001_001_03_to_stip_st_001
 
 import (
 	"fmt"
@@ -11,18 +11,53 @@ import (
 )
 
 type ConvOptions struct {
-	pain_001_001_03_Adapter pain_001_001_03.DocumentAdapter
+	inputAdapter  pain_001_001_03.DocumentAdapter
+	outputAdapter stip_st_001.DocumentsAdapter
 }
 
 type ConvOption func(opts *ConvOptions)
 
-func WithConvAdapter(adapter pain_001_001_03.DocumentAdapter) ConvOption {
+func WithInputAdapter(adapter pain_001_001_03.DocumentAdapter) ConvOption {
 	return func(opts *ConvOptions) {
-		opts.pain_001_001_03_Adapter = adapter
+		opts.inputAdapter = adapter
 	}
 }
 
-func Pain_001_001_03_To_Stip_St_001_Conv(in *pain_001_001_03.Document, opts ...ConvOption) ([]*stip_st_001.Document, error) {
+func WithOutputAdapter(adapter stip_st_001.DocumentsAdapter) ConvOption {
+	return func(opts *ConvOptions) {
+		opts.outputAdapter = adapter
+	}
+}
+
+func DefaultOutputAdapter(in []*stip_st_001.Document) ([]*stip_st_001.Document, error) {
+
+	const semLogContext = "stip_mo_001_00_04_00::stips-st-001-default-adapter"
+
+	var err error
+	if len(in) < 2 {
+		return in, nil
+	}
+
+	for i, stip := range in {
+		stip.GrpHdr.NbOfTxs = "1"
+
+		var msgId string
+		if len(stip.GrpHdr.MsgId) <= 32 {
+			msgId = fmt.Sprintf("%s_%02d", stip.GrpHdr.MsgId, i)
+		} else {
+			msgId = fmt.Sprintf("%s_%02d", stip.GrpHdr.MsgId[:32], i)
+		}
+		stip.GrpHdr.MsgId, err = common.ToMax35Text(msgId)
+		if err != nil {
+			log.Error().Err(err).Msg(semLogContext)
+			return nil, err
+		}
+	}
+
+	return in, nil
+}
+
+func Conv(in *pain_001_001_03.Document, opts ...ConvOption) ([]*stip_st_001.Document, error) {
 
 	const semLogContext = "pain-001-001-03-to-stip-st-001::conv"
 
@@ -32,8 +67,8 @@ func Pain_001_001_03_To_Stip_St_001_Conv(in *pain_001_001_03.Document, opts ...C
 	}
 
 	var err error
-	if options.pain_001_001_03_Adapter != nil {
-		in, err = options.pain_001_001_03_Adapter(in)
+	if options.inputAdapter != nil {
+		in, err = options.inputAdapter(in)
 		if err != nil {
 			return nil, err
 		}
@@ -41,42 +76,36 @@ func Pain_001_001_03_To_Stip_St_001_Conv(in *pain_001_001_03.Document, opts ...C
 
 	var stips []*stip_st_001.Document
 	if len(in.CstmrCdtTrfInitn.PmtInf) == 1 {
-		stip := stip_st_001.Document{
+		stip := &stip_st_001.Document{
 			GrpHdr: in.CstmrCdtTrfInitn.GrpHdr,
 			PmtInf: in.CstmrCdtTrfInitn.PmtInf[0],
 		}
 
-		stips = append(stips, &stip)
+		stips = append(stips, stip)
+
 	} else {
-		for i, pmtinf := range in.CstmrCdtTrfInitn.PmtInf {
-
+		for _, pmtinf := range in.CstmrCdtTrfInitn.PmtInf {
 			hdr := *in.CstmrCdtTrfInitn.GrpHdr
-			hdr.NbOfTxs = "1"
-
-			var msgId string
-			if len(hdr.MsgId) <= 32 {
-				msgId = fmt.Sprintf("%s_%02d", hdr.MsgId, i)
-			} else {
-				msgId = fmt.Sprintf("%s_%02d", hdr.MsgId[:32], i)
-			}
-			hdr.MsgId, err = common.ToMax35Text(msgId)
-			if err != nil {
-				log.Error().Err(err).Msg(semLogContext)
-			}
-
-			stip := stip_st_001.Document{
+			stip := &stip_st_001.Document{
 				GrpHdr: &hdr,
 				PmtInf: pmtinf,
 			}
 
-			stips = append(stips, &stip)
+			stips = append(stips, stip)
+		}
+	}
+
+	if options.outputAdapter != nil {
+		stips, err = options.outputAdapter(stips)
+		if err != nil {
+			return nil, err
 		}
 	}
 
 	return stips, nil
 }
 
-func Pain_001_001_03_To_Stip_St_001_XMLDataConv(painData []byte, opts ...ConvOption) ([][]byte, error) {
+func XMLDataConv(painData []byte, opts ...ConvOption) ([][]byte, error) {
 
 	const semLogContext = "pain-001-001-03-to-stip-st-001::xml-data-conv"
 
@@ -86,7 +115,7 @@ func Pain_001_001_03_To_Stip_St_001_XMLDataConv(painData []byte, opts ...ConvOpt
 		return nil, err
 	}
 
-	stips, err := Pain_001_001_03_To_Stip_St_001_Conv(pain, opts...)
+	stips, err := Conv(pain, opts...)
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
 		return nil, err
@@ -106,7 +135,7 @@ func Pain_001_001_03_To_Stip_St_001_XMLDataConv(painData []byte, opts ...ConvOpt
 	return stipsData, nil
 }
 
-func Pain_001_001_03_To_Stip_St_001_XMLFileConv(inFn string, outFn string, opts ...ConvOption) ([]string, error) {
+func XMLFileConv(inFn string, outFn string, opts ...ConvOption) ([]string, error) {
 
 	const semLogContext = "pain-001-001-03-to-stip-st-001::xml-file-conv"
 
@@ -116,7 +145,7 @@ func Pain_001_001_03_To_Stip_St_001_XMLFileConv(inFn string, outFn string, opts 
 		return nil, err
 	}
 
-	stipsData, err := Pain_001_001_03_To_Stip_St_001_XMLDataConv(painData, opts...)
+	stipsData, err := XMLDataConv(painData, opts...)
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
 		return nil, err

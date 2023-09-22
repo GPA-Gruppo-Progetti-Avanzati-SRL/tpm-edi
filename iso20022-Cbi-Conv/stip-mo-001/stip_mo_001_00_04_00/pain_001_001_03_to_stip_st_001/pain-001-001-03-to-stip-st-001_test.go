@@ -1,4 +1,4 @@
-package stip_mo_001_00_04_00_test
+package pain_001_001_03_to_stip_st_001_test
 
 import (
 	_ "embed"
@@ -6,7 +6,7 @@ import (
 	pain_001_001_03_common "github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022/iso-20022/messages/pain/001.001.03/common"
 	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022/iso-20022/messages/pain/001.001.03/pain_001_001_03"
 	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022/iso-20022/messages/xsdt"
-	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi/iso20022-Cbi-Conv/stip-mo-001/stip_mo_001_00_04_00"
+	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi/iso20022-Cbi-Conv/stip-mo-001/stip_mo_001_00_04_00/pain_001_001_03_to_stip_st_001"
 	"github.com/stretchr/testify/require"
 	"io/fs"
 	"os"
@@ -45,7 +45,9 @@ func Pain001_001_03_Adapter(pain *pain_001_001_03.Document) (*pain_001_001_03.Do
 
 func TestPain_001_001_03_To_Stip_St_001_XMLConv(t *testing.T) {
 	adapter := pain_001_001_03.DocumentAdapter(Pain001_001_03_Adapter)
-	stipsData, err := stip_mo_001_00_04_00.Pain_001_001_03_To_Stip_St_001_XMLDataConv(example, stip_mo_001_00_04_00.WithConvAdapter(adapter))
+	stipsData, err := pain_001_001_03_to_stip_st_001.XMLDataConv(example,
+		pain_001_001_03_to_stip_st_001.WithInputAdapter(adapter),
+		pain_001_001_03_to_stip_st_001.WithOutputAdapter(pain_001_001_03_to_stip_st_001.DefaultOutputAdapter))
 	require.NoError(t, err)
 
 	for i, stipData := range stipsData {
@@ -62,7 +64,7 @@ func TestPain_001_001_03_To_Stip_St_001_Conv(t *testing.T) {
 	pain, err := pain_001_001_03.NewDocumentFromXML(example)
 	require.NoError(t, err)
 
-	stipsObj, err := stip_mo_001_00_04_00.Pain_001_001_03_To_Stip_St_001_Conv(pain, stip_mo_001_00_04_00.WithConvAdapter(adapter))
+	stipsObj, err := pain_001_001_03_to_stip_st_001.Conv(pain, pain_001_001_03_to_stip_st_001.WithInputAdapter(adapter))
 	require.NoError(t, err)
 
 	for i, stipObj := range stipsObj {
