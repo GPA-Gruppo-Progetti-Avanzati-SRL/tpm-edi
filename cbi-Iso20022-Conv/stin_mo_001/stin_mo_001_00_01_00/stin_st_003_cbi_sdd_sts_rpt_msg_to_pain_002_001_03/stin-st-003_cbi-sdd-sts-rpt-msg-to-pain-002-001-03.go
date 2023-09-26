@@ -1,4 +1,4 @@
-package stin_mo_001_00_01_00
+package stin_st_003_cbi_sdd_sts_rpt_msg_to_pain_002_001_03
 
 import (
 	"fmt"
@@ -9,13 +9,40 @@ import (
 	"os"
 )
 
-func Stin_St_003_CbiSdd_StsRptMsg_To_Pain_002_001_03_Conv(in *stin_st_003_cbisdd_stsrptmsg.Document, opts ...ConvOption) ([]*pain_002_001_03.Document, error) {
+type ConvOptions struct {
+	outputAdapter pain_002_001_03.DocumentsAdapter
+	inputAdapter  stin_st_003_cbisdd_stsrptmsg.DocumentAdapter
+}
+
+type ConvOption func(opts *ConvOptions)
+
+func WithOutputAdapter(adapter pain_002_001_03.DocumentsAdapter) ConvOption {
+	return func(opts *ConvOptions) {
+		opts.outputAdapter = adapter
+	}
+}
+
+func WithInputAdapter(adapter stin_st_003_cbisdd_stsrptmsg.DocumentAdapter) ConvOption {
+	return func(opts *ConvOptions) {
+		opts.inputAdapter = adapter
+	}
+}
+
+func Conv(in *stin_st_003_cbisdd_stsrptmsg.Document, opts ...ConvOption) ([]*pain_002_001_03.Document, error) {
 
 	const semLogContext = "stin_st_003_cbi-sdd_stsrptmsg_to_pain_002_001_03::conv"
 
 	options := ConvOptions{}
 	for _, o := range opts {
 		o(&options)
+	}
+
+	var err error
+	if options.inputAdapter != nil {
+		in, err = options.inputAdapter(in)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	var pains []*pain_002_001_03.Document
@@ -27,21 +54,20 @@ func Stin_St_003_CbiSdd_StsRptMsg_To_Pain_002_001_03_Conv(in *stin_st_003_cbisdd
 			OrgnlPmtInfAndSts: env.CBISDDStsRptLogMsg.OrgnlPmtInfAndSts,
 		}
 
-		var err error
-		if options.pain_002_001_03_Adapter != nil {
-			_, err = options.pain_002_001_03_Adapter(&pain)
-			if err != nil {
-				return nil, err
-			}
-		}
-
 		pains = append(pains, &pain)
+	}
+
+	if options.outputAdapter != nil {
+		pains, err = options.outputAdapter(pains)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return pains, nil
 }
 
-func Stin_St_003_CbiSdd_StsRptMsg_To_Pain_002_001_03_XMLDataConv(stinData []byte, opts ...ConvOption) ([][]byte, error) {
+func XMLDataConv(stinData []byte, opts ...ConvOption) ([][]byte, error) {
 
 	const semLogContext = "stin_st_003_cbi-sdd_stsrptmsg_to_pain_002_001_03::xml-data-conv"
 
@@ -51,7 +77,7 @@ func Stin_St_003_CbiSdd_StsRptMsg_To_Pain_002_001_03_XMLDataConv(stinData []byte
 		return nil, err
 	}
 
-	pains, err := Stin_St_003_CbiSdd_StsRptMsg_To_Pain_002_001_03_Conv(stin, opts...)
+	pains, err := Conv(stin, opts...)
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
 		return nil, err
@@ -71,7 +97,7 @@ func Stin_St_003_CbiSdd_StsRptMsg_To_Pain_002_001_03_XMLDataConv(stinData []byte
 	return painsData, nil
 }
 
-func Stin_St_003_CbiSdd_StsRptMsg_To_Pain_002_001_03_XMLFileConv(inFn string, outFn string, opts ...ConvOption) ([]string, error) {
+func XMLFileConv(inFn string, outFn string, opts ...ConvOption) ([]string, error) {
 
 	const semLogContext = "stin_st_003_cbi-sdd_stsrptmsg_to_pain_002_001_03::xml-file-conv"
 
@@ -81,7 +107,7 @@ func Stin_St_003_CbiSdd_StsRptMsg_To_Pain_002_001_03_XMLFileConv(inFn string, ou
 		return nil, err
 	}
 
-	painsData, err := Stin_St_003_CbiSdd_StsRptMsg_To_Pain_002_001_03_XMLDataConv(stinData, opts...)
+	painsData, err := XMLDataConv(stinData, opts...)
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
 		return nil, err

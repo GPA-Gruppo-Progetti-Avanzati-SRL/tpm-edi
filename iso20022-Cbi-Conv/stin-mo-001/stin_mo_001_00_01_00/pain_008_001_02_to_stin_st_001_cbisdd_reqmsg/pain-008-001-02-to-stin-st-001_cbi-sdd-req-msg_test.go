@@ -1,11 +1,11 @@
-package stin_mo_001_00_01_00_test
+package pain_008_001_02_to_stin_st_001_cbisdd_reqmsg_test
 
 import (
 	_ "embed"
 	pain_008_001_02_common "github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022/iso-20022/messages/pain/008.001.02/common"
 	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022/iso-20022/messages/pain/008.001.02/pain_008_001_02"
 	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-iso20022/iso-20022/messages/xsdt"
-	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi/iso20022-Cbi-Conv/stin-mo-001/stin_mo_001_00_01_00"
+	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi/iso20022-Cbi-Conv/stin-mo-001/stin_mo_001_00_01_00/pain_008_001_02_to_stin_st_001_cbisdd_reqmsg"
 	"github.com/stretchr/testify/require"
 	"io/fs"
 	"os"
@@ -40,10 +40,10 @@ func Pain008_001_02_Adapter(pain *pain_008_001_02.Document) (*pain_008_001_02.Do
 	return pain, nil
 }
 
-func TestPain_008_001_02_To_Stin_Mo_001_00_01_00_XMLConv(t *testing.T) {
+func Test_XMLConv(t *testing.T) {
 
 	adapter := pain_008_001_02.DocumentAdapter(Pain008_001_02_Adapter)
-	stinData, err := stin_mo_001_00_01_00.Pain_008_001_02_To_Stin_St_001_CbiSdd_ReqMsg_XMLDataConv(examplePain00800102, stin_mo_001_00_01_00.WithConvAdapter(adapter))
+	stinData, err := pain_008_001_02_to_stin_st_001_cbisdd_reqmsg.XMLDataConv(examplePain00800102, pain_008_001_02_to_stin_st_001_cbisdd_reqmsg.WithInputAdapter(adapter))
 	require.NoError(t, err)
 
 	err = os.WriteFile(example_stin_st_001_cbisdd_reqmsg, stinData, fs.ModePerm)
@@ -52,14 +52,14 @@ func TestPain_008_001_02_To_Stin_Mo_001_00_01_00_XMLConv(t *testing.T) {
 	defer os.Remove(example_stin_st_001_cbisdd_reqmsg)
 }
 
-func TestPain_008_001_02_To_Stin_Mo_001_00_01_00_Conv(t *testing.T) {
+func Test_Conv(t *testing.T) {
 
 	adapter := pain_008_001_02.DocumentAdapter(Pain008_001_02_Adapter)
 
 	pain, err := pain_008_001_02.NewDocumentFromXML(examplePain00800102)
 	require.NoError(t, err)
 
-	stinObj, err := stin_mo_001_00_01_00.Pain_008_001_02_To_Stin_St_001_CbiSdd_ReqMsg_Conv(pain, stin_mo_001_00_01_00.WithConvAdapter(adapter))
+	stinObj, err := pain_008_001_02_to_stin_st_001_cbisdd_reqmsg.Conv(pain, pain_008_001_02_to_stin_st_001_cbisdd_reqmsg.WithInputAdapter(adapter))
 	require.NoError(t, err)
 
 	/*

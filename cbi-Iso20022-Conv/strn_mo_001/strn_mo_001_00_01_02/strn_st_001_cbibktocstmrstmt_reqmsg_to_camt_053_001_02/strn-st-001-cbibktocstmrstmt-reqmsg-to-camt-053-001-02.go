@@ -1,4 +1,4 @@
-package strn_mo_001_00_01_02
+package strn_st_001_cbibktocstmrstmt_reqmsg_to_camt_053_001_02
 
 import (
 	"fmt"
@@ -10,24 +10,39 @@ import (
 )
 
 type ConvOptions struct {
-	camt_053_001_02_Adapter camt_053_001_02.DocumentAdapter
+	outputAdapter camt_053_001_02.DocumentsAdapter
+	inputAdapter  strn_st_001_cbibktocstmrstmt_reqmsg.DocumentAdapter
 }
 
 type ConvOption func(opts *ConvOptions)
 
-func WithConvAdapter(adapter camt_053_001_02.DocumentAdapter) ConvOption {
+func WithOutputAdapter(adapter camt_053_001_02.DocumentsAdapter) ConvOption {
 	return func(opts *ConvOptions) {
-		opts.camt_053_001_02_Adapter = adapter
+		opts.outputAdapter = adapter
 	}
 }
 
-func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_Conv(in *strn_st_001_cbibktocstmrstmt_reqmsg.Document, opts ...ConvOption) ([]*camt_053_001_02.Document, error) {
+func WithInputAdapter(adapter strn_st_001_cbibktocstmrstmt_reqmsg.DocumentAdapter) ConvOption {
+	return func(opts *ConvOptions) {
+		opts.inputAdapter = adapter
+	}
+}
+
+func Conv(in *strn_st_001_cbibktocstmrstmt_reqmsg.Document, opts ...ConvOption) ([]*camt_053_001_02.Document, error) {
 
 	const semLogContext = "strn-st-001-cbibktocstmrstmtreqlogmsg-to-camt-053-001-02::conv"
 
 	options := ConvOptions{}
 	for _, o := range opts {
 		o(&options)
+	}
+
+	var err error
+	if options.inputAdapter != nil {
+		in, err = options.inputAdapter(in)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	var camts []*camt_053_001_02.Document
@@ -38,21 +53,20 @@ func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_Conv(in *strn_st_0
 			Stmt:   env.CBIBkToCstmrStmtReqLogMsg.CBIDlyStmtReqLogMsg.Stmt,
 		}
 
-		var err error
-		if options.camt_053_001_02_Adapter != nil {
-			_, err = options.camt_053_001_02_Adapter(&camt)
-			if err != nil {
-				return nil, err
-			}
-		}
-
 		camts = append(camts, &camt)
+	}
+
+	if options.outputAdapter != nil {
+		camts, err = options.outputAdapter(camts)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return camts, nil
 }
 
-func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_XMLDataConv(strnData []byte, opts ...ConvOption) ([][]byte, error) {
+func XMLDataConv(strnData []byte, opts ...ConvOption) ([][]byte, error) {
 
 	const semLogContext = "strn-st-001-cbibktocstmrstmtreqlogmsg-to-camt-053-001-02::xml-data-conv"
 
@@ -62,7 +76,7 @@ func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_XMLDataConv(strnDa
 		return nil, err
 	}
 
-	camts, err := Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_Conv(strn, opts...)
+	camts, err := Conv(strn, opts...)
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
 		return nil, err
@@ -82,7 +96,7 @@ func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_XMLDataConv(strnDa
 	return camtsData, nil
 }
 
-func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_XMLFileConv(inFn string, outFn string, opts ...ConvOption) ([]string, error) {
+func XMLFileConv(inFn string, outFn string, opts ...ConvOption) ([]string, error) {
 
 	const semLogContext = "strn-st-001-cbibktocstmrstmtreqlogmsg-to-camt-053-001-02::xml-file-conv"
 
@@ -92,7 +106,7 @@ func Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_XMLFileConv(inFn s
 		return nil, err
 	}
 
-	camtsData, err := Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_XMLDataConv(strnData, opts...)
+	camtsData, err := XMLDataConv(strnData, opts...)
 	if err != nil {
 		log.Error().Err(err).Msg(semLogContext)
 		return nil, err

@@ -1,10 +1,10 @@
-package strn_mo_001_00_01_02_test
+package strn_st_001_cbibktocstmrstmt_reqmsg_to_camt_053_001_02_test
 
 import (
 	_ "embed"
 	"fmt"
 	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi-cbi/cbi/strn_mo_001/strn_mo_001_00_01_02/strn_st_001_cbibktocstmrstmt_reqmsg"
-	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi/cbi-Iso20022-Conv/strn_mo_001/strn_mo_001_00_01_02"
+	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-edi/cbi-Iso20022-Conv/strn_mo_001/strn_mo_001_00_01_02/strn_st_001_cbibktocstmrstmt_reqmsg_to_camt_053_001_02"
 	"github.com/stretchr/testify/require"
 	"io/fs"
 	"os"
@@ -16,12 +16,12 @@ var exampleStrnSt001 []byte
 
 const example_camt_053_001_02 = "example-camt_053_001_02_%d.xml"
 
-func TestStrn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_Conv(t *testing.T) {
+func Test_Conv(t *testing.T) {
 
 	strn, err := strn_st_001_cbibktocstmrstmt_reqmsg.NewDocumentFromXML(exampleStrnSt001)
 	require.NoError(t, err)
 
-	camts, err := strn_mo_001_00_01_02.Strn_St_001_CBIBkToCstmrStmtReqLogMsg_To_Camt_053_001_02_Conv(strn)
+	camts, err := strn_st_001_cbibktocstmrstmt_reqmsg_to_camt_053_001_02.Conv(strn)
 	require.NoError(t, err)
 
 	for i, camt := range camts {

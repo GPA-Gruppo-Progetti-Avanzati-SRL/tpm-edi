@@ -43,7 +43,7 @@ func Pain001_001_03_Adapter(pain *pain_001_001_03.Document) (*pain_001_001_03.Do
 	return pain, nil
 }
 
-func TestPain_001_001_03_To_Stip_St_001_XMLConv(t *testing.T) {
+func Test_XMLConv(t *testing.T) {
 	adapter := pain_001_001_03.DocumentAdapter(Pain001_001_03_Adapter)
 	stipsData, err := pain_001_001_03_to_stip_st_001.XMLDataConv(example,
 		pain_001_001_03_to_stip_st_001.WithInputAdapter(adapter),
@@ -59,7 +59,7 @@ func TestPain_001_001_03_To_Stip_St_001_XMLConv(t *testing.T) {
 	}
 }
 
-func TestPain_001_001_03_To_Stip_St_001_Conv(t *testing.T) {
+func Test_Conv(t *testing.T) {
 	adapter := pain_001_001_03.DocumentAdapter(Pain001_001_03_Adapter)
 	pain, err := pain_001_001_03.NewDocumentFromXML(example)
 	require.NoError(t, err)
