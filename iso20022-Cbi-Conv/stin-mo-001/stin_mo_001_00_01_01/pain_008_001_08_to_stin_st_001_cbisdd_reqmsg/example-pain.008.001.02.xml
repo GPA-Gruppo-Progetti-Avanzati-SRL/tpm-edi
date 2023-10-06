@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.008.001.02" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <CstmrDrctDbtInitn>
+        <GrpHdr>
+            <MsgId>SDD-10001376-Direct-Debit-External-</MsgId>
+            <CreDtTm>2023-01-04T13:26:54</CreDtTm>
+            <NbOfTxs>1</NbOfTxs>
+            <InitgPty>
+                <Nm>Daimler Truck Financial Services IT</Nm>
+            </InitgPty>
+        </GrpHdr>
+        <PmtInf>
+            <PmtInfId>SDD-10001376-Direct-Debit-External-</PmtInfId>
+            <PmtMtd>DD</PmtMtd>
+            <PmtTpInf>
+                <SvcLvl>
+                    <Cd>SEPA</Cd>
+                </SvcLvl>
+                <LclInstrm>
+                    <Cd>B2B</Cd>
+                </LclInstrm>
+                <SeqTp>RCUR</SeqTp>
+            </PmtTpInf>
+            <ReqdColltnDt>2023-01-04</ReqdColltnDt>
+            <Cdtr>
+                <Nm>Daimler Truck Financial Services IT</Nm>
+            </Cdtr>
+            <CdtrAcct>
+                <Id>
+                    <IBAN>IT77X0200805239000106337223</IBAN>
+                </Id>
+            </CdtrAcct>
+            <CdtrAgt>
+                <FinInstnId>
+                    <BIC>UNCRITMM</BIC>
+                </FinInstnId>
+            </CdtrAgt>
+            <ChrgBr>SLEV</ChrgBr>
+            <CdtrSchmeId>
+                <Id>
+                    <PrvtId>
+                        <Othr>
+                            <Id>DE1800000002539493</Id>
+                            <SchmeNm>
+                                <Prtry>SEPA</Prtry>
+                            </SchmeNm>
+                        </Othr>
+                    </PrvtId>
+                </Id>
+            </CdtrSchmeId>
+            <DrctDbtTxInf>
+                <PmtId>
+                    <EndToEndId>SDD-10001376-10002812</EndToEndId>
+                </PmtId>
+                <InstdAmt Ccy="EUR">10.00</InstdAmt>
+                <DrctDbtTx>
+                    <MndtRltdInf>
+                        <MndtId>SFOF5000140006</MndtId>
+                        <DtOfSgntr>1800-01-01</DtOfSgntr>
+                    </MndtRltdInf>
+                </DrctDbtTx>
+                <DbtrAgt>
+                    <FinInstnId>
+                        <Othr>
+                            <Id>NOTPROVIDED</Id>
+                        </Othr>
+                    </FinInstnId>
+                </DbtrAgt>
+                <Dbtr>
+                    <Nm>A14 Truck Service GmbH</Nm>
+                    <PstlAdr>
+                        <Ctry>DE</Ctry>
+                        <AdrLine>Meissner Weg</AdrLine>
+                        <AdrLine>01683 Bodenbach</AdrLine>
+                    </PstlAdr>
+                </Dbtr>
+                <DbtrAcct>
+                    <Id>
+                        <IBAN>DE66999927251153849000</IBAN>
+                    </Id>
+                </DbtrAcct>
+            </DrctDbtTxInf>
+        </PmtInf>
+    </CstmrDrctDbtInitn>
+</Document>
